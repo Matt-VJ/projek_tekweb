@@ -1,22 +1,3 @@
-# Public Homepage & Category Grid (Generic Version)
-
-## Features
-- Public homepage: `home_public.php` (category filter, search, grid, load more)
-- JSON endpoint: `fetch_posts_public.php` (supports category, search, pagination)
-- Minimal CSS: `assets/css/public_grid.css`
-- SQL for categories/posts: `add_public_categories_posts.sql` (safe to import in phpMyAdmin)
-
-## How to use
-1. Import `add_public_categories_posts.sql` into your `mini_cms` database (phpMyAdmin or CLI).
-2. Place all new files in your project root (do not overwrite existing files).
-3. Open `home_public.php` in your browser (e.g., `http://localhost/projek_tekweb/home_public.php`).
-4. Use the filter/search UI and "Load more" to test.
-
-## Safety
-- No existing files or tables are overwritten.
-- All names are generic: `categories`, `posts`, `home_public.php`, etc.
-- You can safely merge this with any branch without breaking your friend's work.
-
 ## SQL quick import (copy-paste)
 See `add_public_categories_posts.sql` or copy below:
 
