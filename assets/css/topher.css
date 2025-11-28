@@ -1,0 +1,28 @@
+/* Topher CMS Styles */
+:root{ --gap:12px; --card-bg:#fff; --muted:#666; }
+body{ font-family:Segoe UI, Roboto, Arial, sans-serif; margin:0; padding:20px; background:#f5f5f7; color:#111 }
+.container{ max-width:1100px; margin:0 auto }
+.filters{ display:flex; gap:10px; align-items:center; margin-bottom:16px }
+.filters label{ font-weight:600 }
+.filters input, .filters select, .filters button{ padding:8px 12px; border:1px solid #ddd; border-radius:4px }
+.filters button{ background:#3b82f6; color:white; cursor:pointer; font-weight:500 }
+.filters button:hover{ background:#2563eb }
+.grid{ display:grid; grid-template-columns: repeat(auto-fill,minmax(240px,1fr)); gap:var(--gap) }
+.card{ background:var(--card-bg); border-radius:8px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.06); display:flex; flex-direction:column; transition: transform 0.2s, box-shadow 0.2s }
+.card:hover{ transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.1) }
+.thumb{ height:140px; background:#eee; position:relative; overflow:hidden }
+.thumb img{ width:100%; height:100%; object-fit:cover; display:block }
+.thumb img.error{ display:none }
+.placeholder{ width:100%; height:100%; background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); display:flex; align-items:center; justify-content:center; color:white; font-size:48px; opacity:0.3 }
+.meta{ padding:12px }
+.meta h2{ margin:0 0 6px; font-size:1.05rem }
+.meta .excerpt{ color:var(--muted); font-size:0.95rem; margin:6px 0 }
+.meta .category{ font-size:0.8rem; color:var(--muted); background:#f0f0f0; padding:4px 8px; border-radius:4px; display:inline-block }
+
+#loadMore{ padding:10px 24px; background:#3b82f6; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:500; font-size:14px }
+#loadMore:hover{ background:#2563eb }
+
+@media (max-width:480px){ 
+    .filters{ flex-direction:column; align-items:stretch }
+    .grid{ grid-template-columns: 1fr }
+}
