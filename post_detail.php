@@ -168,6 +168,29 @@ $comment_count = $commentObj->getCountByPostId($post_id);
             border-radius: 4px;
             margin-bottom: 10px;
         }
+        /* Tambahkan ini di dalam tag <style> */
+
+        .post-header h1 {
+            /* ... style lama kamu biarkan saja ... */
+            
+            /* TAMBAHKAN 2 BARIS INI: */
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .post-content {
+            /* ... style lama kamu biarkan saja ... */
+            
+            /* TAMBAHKAN 2 BARIS INI: */
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .comment-content {
+            /* Agar komentar juga rapi */
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
     </style>
 </head>
 <body>
@@ -187,6 +210,9 @@ $comment_count = $commentObj->getCountByPostId($post_id);
         <?php endif; ?>
         
         <div class="post-content">
+            <?= nl2br(htmlspecialchars($post['content'])) ?>
+        </div>
+        <div class="post-content" style="overflow-wrap: break-word; word-break: break-word;">
             <?= nl2br(htmlspecialchars($post['content'])) ?>
         </div>
     </article>

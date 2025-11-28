@@ -145,41 +145,58 @@ $posts = db_fetch_all(
                             <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-50 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php foreach ($posts as $p): ?>
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
-                                <span class="text-gray-600 font-semibold"><?=htmlspecialchars($p['id'])?></span>
-                            </td>
-                            <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
-                                <p class="text-gray-900 font-semibold"><?=htmlspecialchars($p['title'])?></p>
-                                <?php if ($p['image']): ?>
-                                    <p class="text-xs text-gray-400 mt-1"><i class="fas fa-image"></i> Has image</p>
-                                <?php endif; ?>
-                            </td>
-                            <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm">
-                                <?php if ($p['category_name']): ?>
-                                    <span class="px-3 py-1 font-semibold text-blue-900 leading-tight bg-blue-100 rounded-full text-xs">
-                                        <?=htmlspecialchars($p['category_name'])?>
-                                    </span>
-                                <?php else: ?>
-                                    <span class="text-gray-400 text-xs italic">No category</span>
-                                <?php endif; ?>
-                            </td>
-                            <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm text-gray-600">
-                                <?=htmlspecialchars($p['published_at'])?>
-                            </td>
-                            <td class="px-5 py-4 border-b border-gray-200 bg-white text-sm text-center">
-                                <a href="#edit-<?=htmlspecialchars($p['id'])?>" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 p-2 rounded transition mr-2" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a href="?delete=<?=htmlspecialchars($p['id'])?>" onclick="return confirm('Yakin hapus postingan ini?')" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-2 rounded transition" title="Delete">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
+                    <tbody id="postTableBody">
+    <?php foreach ($posts as $p): ?>
+    <tr class="hover:bg-gray-50 transition border-b border-gray-200">
+        
+        <td class="px-5 py-4 bg-white text-sm w-20"> <?php if ($p['image']): ?>
+                <img src="<?= htmlspecialchars($p['image']) ?>" class="w-12 h-12 object-cover rounded border">
+            <?php else: ?>
+                <div class="w-12 h-12 bg-gray-100 rounded border flex items-center justify-center text-gray-400">
+                    <i class="fas fa-image"></i>
+                </div>
+            <?php endif; ?>
+        </td>
+
+        <td class="px-5 py-4 bg-white">
+            <div class="max-w-xs md:max-w-sm">
+                <p class="text-gray-900 font-bold text-base mb-1 truncate" title="<?= htmlspecialchars($p['title']) ?>">
+                    <?= htmlspecialchars($p['title']) ?>
+                </p>
+                
+                <p class="text-gray-500 text-sm truncate" title="<?= htmlspecialchars($p['excerpt']) ?>">
+                    <?= htmlspecialchars($p['excerpt']) ?>
+                </p>
+            </div>
+        </td>
+
+        <td class="px-5 py-4 bg-white text-sm whitespace-nowrap"> <?php if ($p['category_name']): ?>
+                <span class="px-2 py-1 font-semibold text-blue-800 bg-blue-100 rounded-full text-xs">
+                    <?= htmlspecialchars($p['category_name']) ?>
+                </span>
+            <?php else: ?>
+                <span class="text-gray-400 text-xs italic">Tanpa Kategori</span>
+            <?php endif; ?>
+        </td>
+
+        <td class="px-5 py-4 bg-white text-sm text-gray-600 whitespace-nowrap">
+            <?= date('d M Y', strtotime($p['published_at'])) ?>
+            <br>
+            <span class="text-xs text-gray-400"><?= date('H:i', strtotime($p['published_at'])) ?></span>
+        </td>
+
+        <td class="px-5 py-4 bg-white text-sm text-center w-24"> <div class="flex justify-center gap-2">
+                <button onclick='openModal("edit", <?= json_encode($p) ?>)' class="text-yellow-500 hover:text-yellow-700 bg-yellow-50 p-2 rounded transition" title="Edit">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <a href="?delete_id=<?= $p['id'] ?>" onclick="return confirm('Yakin hapus postingan ini?')" class="text-red-500 hover:text-red-700 bg-red-50 p-2 rounded transition" title="Hapus">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
+            </div>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</tbody>
                 </table>
             </div>
         </div>
