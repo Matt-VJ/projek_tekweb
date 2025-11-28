@@ -63,13 +63,13 @@ class Auth {
     public function logout() {
         session_unset();
         session_destroy();
-        header("Location: login.php");
+        header("Location: Login.php");
         exit;
     }
 
     public function requireLogin() {
         if (!isset($_SESSION['is_logged_in'])) {
-            header("Location: ../login.php");
+            header("Location: ../Login.php");
             exit;
         }
     }
