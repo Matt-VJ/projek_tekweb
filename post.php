@@ -41,14 +41,17 @@ class Post {
 
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
-$result = $stmt->get_result();
-$post = $result->fetch_assoc();
-$stmt->close();
+        return $stmt;
+    }
 
-// cek post ada atau tidak
-if (!$post){
-    echo "Post not found.";
-    exit;
+    // 3. Upload Image
+    public function uploadImage($file) {
+        if (empty($file['name'])) return null;
+
+        $target_dir = "../uploads/";
+
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
         }
 
         $file_name = time() . "_" . basename($file["name"]);

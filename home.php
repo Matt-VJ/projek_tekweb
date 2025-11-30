@@ -1,71 +1,99 @@
 <?php
 require_once __DIR__ . '/db.php';
 
-// Server-side fetch for initial render (and graceful fallback)
 $categories = db_fetch_all("SELECT id, name FROM topher_categories ORDER BY name");
 
-$initial_posts = db_fetch_all("SELECT p.id, p.title, p.excerpt, p.image, p.published_at, c.name AS category_name, c.id AS category_id,
+$initial_posts = db_fetch_all("SELECT p.id, p.title, p.excerpt, p.image, p.published_at, c.name AS category_name,
     (SELECT COUNT(*) FROM comments WHERE post_id = p.id AND status = 'approved') as comment_count
     FROM topher_posts p
     LEFT JOIN topher_categories c ON p.category_id = c.id
     ORDER BY p.published_at DESC LIMIT 6");
-
 ?>
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="id">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Public Homepage - Tophers Grid</title>
-    <link rel="stylesheet" href="assets/css/topher.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage - Mini CMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-<main class="container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h1>Public Homepage</h1>
-        <a href="Login.php" style="background: #3b82f6; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500;">Login</a>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Header -->
+    <nav class="bg-white shadow-md px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+        <div class="font-bold text-xl text-blue-600 flex items-center gap-2">
+            <i class="fas fa-rocket"></i> Mini CMS
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="Login.php" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm transition flex items-center gap-2 shadow-sm">
+                <i class="fas fa-sign-in-alt"></i> <span class="hidden sm:inline">Login</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Welcome Banner -->
+    <div class="p-4 sm:p-8 max-w-5xl mx-auto">
+        <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 rounded-xl shadow-lg mb-8 relative overflow-hidden">
+            <div class="relative z-10">
+                <h1 class="text-3xl font-bold mb-2">Selamat Datang di Mini CMS</h1>
+                <p class="opacity-90">Jelajahi postingan terbaru, cari berdasarkan kategori, dan baca komentar dari pembaca.</p>
+            </div>
+            <i class="fas fa-layer-group absolute -right-4 -bottom-4 text-9xl text-white opacity-10"></i>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6 flex flex-wrap gap-4 items-center">
+            <div>
+                <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Kategori:</label>
+                <select id="category" class="border border-gray-300 rounded px-3 py-2">
+                    <option value="">Semua</option>
+                    <?php foreach ($categories as $cat): ?>
+                        <option value="<?= htmlspecialchars($cat['id']) ?>"><?= htmlspecialchars($cat['name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="flex-1">
+                <label for="q" class="block text-sm font-medium text-gray-700 mb-1">Cari Judul:</label>
+                <input id="q" type="search" placeholder="Cari judul..." class="w-full border border-gray-300 rounded px-3 py-2">
+            </div>
+            <button id="apply" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded font-medium mt-6 sm:mt-0">
+                Terapkan
+            </button>
+        </div>
+
+        <!-- Post Grid -->
+        <section id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <?php if (count($initial_posts) === 0): ?>
+                <p class="text-gray-500">Belum ada postingan.</p>
+            <?php else: ?>
+                <?php foreach ($initial_posts as $p): ?>
+                    <article class="bg-white rounded-lg shadow-md hover:shadow-lg transition overflow-hidden cursor-pointer" onclick="location.href='post_detail.php?id=<?= $p['id'] ?>'">
+                        <div class="h-48 bg-gray-200 flex items-center justify-center overflow-hidden">
+                            <?php if ($p['image']): ?>
+                                <img src="<?= htmlspecialchars($p['image']) ?>" alt="" class="object-cover w-full h-full">
+                            <?php else: ?>
+                                <i class="fas fa-image text-4xl text-white opacity-50"></i>
+                            <?php endif; ?>
+                        </div>
+                        <div class="p-4">
+                            <h2 class="font-bold text-lg text-gray-800 mb-1"><?= htmlspecialchars($p['title']) ?></h2>
+                            <p class="text-sm text-gray-600 mb-2"><?= htmlspecialchars($p['excerpt']) ?></p>
+                            <p class="text-xs text-gray-500">Kategori: <?= htmlspecialchars($p['category_name']) ?></p>
+                            <p class="text-xs text-gray-500 mt-1"><i class="fas fa-comments"></i> <?= $p['comment_count'] ?> komentar</p>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </section>
+
+        <!-- Load More -->
+        <div class="text-center mt-8">
+            <button id="loadMore" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded font-medium">
+                Load More
+            </button>
+        </div>
     </div>
-
-    <div class="filters">
-        <label for="category">Category:</label>
-        <select id="category">
-            <option value="">All</option>
-            <?php foreach ($categories as $cat): ?>
-                <option value="<?=htmlspecialchars($cat['id'])?>"><?=htmlspecialchars($cat['name'])?></option>
-            <?php endforeach; ?>
-        </select>
-
-        <label for="q">Search:</label>
-        <input id="q" type="search" placeholder="Search titles...">
-        <button id="apply">Apply</button>
-    </div>
-
-    <section id="grid" class="grid">
-        <?php if (count($initial_posts) === 0): ?>
-            <p>No posts yet.</p>
-        <?php else: ?>
-            <?php foreach ($initial_posts as $p): ?>
-                <article class="card" data-id="<?=htmlspecialchars($p['id'])?>" onclick="location.href='post_detail.php?id=<?=htmlspecialchars($p['id'])?>'" style="cursor: pointer;">
-                    <div class="thumb"><?php if ($p['image']): ?><img src="<?=htmlspecialchars($p['image'])?>" alt="">
-                    <?php else: ?><div class="placeholder"></div><?php endif; ?></div>
-                    <div class="meta">
-                        <h2><?=htmlspecialchars($p['title'])?></h2>
-                        <p class="excerpt"><?=htmlspecialchars($p['excerpt'])?></p>
-                        <p class="category"><?=htmlspecialchars($p['category_name'])?></p>
-                        <p style="font-size: 12px; color: #666; margin-top: 8px;">
-                            <i class="fas fa-comments"></i> <?=$p['comment_count']?> comments
-                        </p>
-                    </div>
-                </article>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </section>
-    <div style="text-align:center; margin-top:16px;">
-        <button id="loadMore">Load more</button>
-    </div>
-
-</main>
 
 <script>
 let currentPage = 1;
@@ -93,21 +121,28 @@ async function fetchPosts({append=false} = {}){
     const grid = document.getElementById('grid');
     if (!append) grid.innerHTML = '';
     if (!Array.isArray(data) || data.length === 0){
-        if (!append) grid.innerHTML = '<p>No posts found.</p>';
+        if (!append) grid.innerHTML = '<p class="text-gray-500">Tidak ditemukan postingan.</p>';
         loading = false;
         return;
     }
     for (const p of data){
         const article = document.createElement('article');
-        article.className = 'card';
-        article.dataset.id = p.id;
-        article.style.cursor = 'pointer';
+        article.className = 'bg-white rounded-lg shadow-md hover:shadow-lg transition overflow-hidden cursor-pointer';
         article.onclick = () => location.href = `post_detail.php?id=${p.id}`;
-        article.innerHTML = `\n            <div class="thumb">${p.image ? `<img src="${p.image}">` : '<div class="placeholder"></div>'}</div>\n            <div class="meta">\n                <h2>${escapeHtml(p.title)}</h2>\n                <p class="excerpt">${escapeHtml(p.excerpt || '')}</p>\n                <p class="category">${escapeHtml(p.category_name || '')}</p>\n                <p style="font-size: 12px; color: #666; margin-top: 8px;"><i class="fas fa-comments"></i> ${p.comment_count || 0} comments</p>\n            </div>\n        `;
+        article.innerHTML = `
+            <div class="h-48 bg-gray-200 flex items-center justify-center overflow-hidden">
+                ${p.image ? `<img src="${p.image}" class="object-cover w-full h-full">` : '<i class="fas fa-image text-4xl text-white opacity-50"></i>'}
+            </div>
+            <div class="p-4">
+                <h2 class="font-bold text-lg text-gray-800 mb-1">${escapeHtml(p.title)}</h2>
+                <p class="text-sm text-gray-600 mb-2">${escapeHtml(p.excerpt || '')}</p>
+                <p class="text-xs text-gray-500">Kategori: ${escapeHtml(p.category_name || '')}</p>
+                <p class="text-xs text-gray-500 mt-1"><i class="fas fa-comments"></i> ${p.comment_count || 0} komentar</p>
+            </div>
+        `;
         grid.appendChild(article);
     }
 
-    // update loadMore visibility
     const loadMore = document.getElementById('loadMore');
     if (lastCount !== null && grid.children.length >= lastCount) loadMore.style.display = 'none';
     else loadMore.style.display = '';
@@ -120,22 +155,6 @@ function escapeHtml(s){ return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;
 document.getElementById('apply').addEventListener('click', e => { currentPage = 1; fetchPosts({append:false}); });
 document.getElementById('q').addEventListener('keypress', e => { if (e.key === 'Enter') { currentPage = 1; fetchPosts({append:false}); } });
 document.getElementById('loadMore').addEventListener('click', e => { currentPage++; fetchPosts({append:true}); });
-
-// initial load uses server-side rendered first page; keep page=1 loaded
-// when user clicks load more we increment and append
-
-// Handle image load errors - show placeholder
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.thumb img').forEach(function(img) {
-        img.addEventListener('error', function() {
-            this.style.display = 'none';
-            const placeholder = document.createElement('div');
-            placeholder.className = 'placeholder';
-            placeholder.innerHTML = '<i class="fas fa-image" style="font-size: 48px; color: rgba(255,255,255,0.5);"></i>';
-            this.parentElement.appendChild(placeholder);
-        });
-    });
-});
 </script>
 
 </body>
