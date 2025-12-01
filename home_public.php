@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/db.php';
 
-// Server-side fetch for initial render (and graceful fallback)
 $categories = db_fetch_all("SELECT id, name FROM categories ORDER BY name");
 
 $initial_posts = db_fetch_all("SELECT p.id, p.title, p.excerpt, p.image, p.published_at, c.name AS category_name, c.id AS category_id
@@ -96,8 +95,6 @@ async function fetchPosts({append=false} = {}){
         article.innerHTML = `\n            <div class="thumb">${p.image ? `<img src="${p.image}">` : '<div class="placeholder"></div>'}</div>\n            <div class="meta">\n                <h2>${escapeHtml(p.title)}</h2>\n                <p class="excerpt">${escapeHtml(p.excerpt || '')}</p>\n                <p class="category">${escapeHtml(p.category_name || '')}</p>\n            </div>\n        `;
         grid.appendChild(article);
     }
-
-    // update loadMore visibility
     const loadMore = document.getElementById('loadMore');
     if (lastCount !== null && grid.children.length >= lastCount) loadMore.style.display = 'none';
     else loadMore.style.display = '';

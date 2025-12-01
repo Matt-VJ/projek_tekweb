@@ -4,7 +4,6 @@ require_once __DIR__ . '/db.php';
 $category_id = isset($_GET['category_id']) && $_GET['category_id'] !== '' ? (int)$_GET['category_id'] : null;
 $q = isset($_GET['q']) ? trim($_GET['q']) : null;
 
-// pagination
 $page = isset($_GET['page']) && (int)$_GET['page'] > 0 ? (int)$_GET['page'] : 1;
 $limit = isset($_GET['limit']) && (int)$_GET['limit'] > 0 ? (int)$_GET['limit'] : 6;
 $offset = ($page - 1) * $limit;
@@ -28,7 +27,6 @@ $sql = "SELECT p.id, p.title, p.excerpt, p.image, p.published_at, c.name AS cate
 
 $rows = db_fetch_all($sql);
 
-// get total count for client if requested
 $count = null;
 if (isset($_GET['include_count']) && $_GET['include_count']){
     $count_sql = "SELECT COUNT(*) AS cnt FROM topher_posts p LEFT JOIN topher_categories c ON p.category_id = c.id $where";

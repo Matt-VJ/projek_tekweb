@@ -13,18 +13,15 @@ class Auth {
         return htmlspecialchars(strip_tags(trim($input)));
     }
 
-    // --- FUNGSI REGISTRASI ---
     public function register($username, $password) {
         $username = $this->sanitize($username);
 
-        // Cek username kembar
         $stmt = $this->db->prepare("SELECT id FROM users WHERE username = :username");
         $stmt->execute([':username' => $username]);
         if ($stmt->rowCount() > 0) {
             return "Username sudah dipakai.";
         }
 
-        // Hash Password & Insert sebagai 'editor'
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $sql = "INSERT INTO users (username, password, role) VALUES (:username, :pass, 'editor')";
         
@@ -39,7 +36,6 @@ class Auth {
         return false;
     }
 
-    // --- FUNGSI LOGIN (STRICT - TANPA COUNTER GAGAL) ---
     public function login($username, $password) {
         $username = $this->sanitize($username);
         
@@ -47,9 +43,7 @@ class Auth {
         $stmt->execute([':username' => $username]);
         $user = $stmt->fetch();
 
-        // Cek User Ada && Username PERSIS SAMA (Case Sensitive) && Password Cocok
         if ($user && $user['username'] === $username && password_verify($password, $user['password'])) {
-            // Set Session
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];

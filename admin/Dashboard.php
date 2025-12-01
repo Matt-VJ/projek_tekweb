@@ -1,12 +1,11 @@
 <?php
-// FILE: admin/dashboard.php
 require_once '../classes/Database.php';
 require_once '../classes/Auth.php';
 
 $auth = new Auth();
-$auth->requireLogin(); // Tendang tamu yang belum login
+$auth->requireLogin();
 
-$user = $auth->getUser(); // Ambil data session user (id, username, role)
+$user = $auth->getUser();
 ?>
 
 <!DOCTYPE html>
@@ -52,16 +51,6 @@ $user = $auth->getUser(); // Ambil data session user (id, username, role)
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
-            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition border-t-4 border-indigo-500 flex flex-col justify-between">
-                <div>
-                    <div class="text-indigo-500 text-3xl mb-4"><i class="fas fa-globe"></i></div>
-                    <h3 class="font-bold text-lg text-gray-800 mb-2">Lihat Website</h3>
-                    <p class="text-gray-500 text-sm mb-4">Buka halaman publik untuk melihat postingan yang sudah dipublikasikan.</p>
-                </div>
-                <a href="../home.php" target="_blank" class="block bg-indigo-50 text-indigo-600 px-4 py-2 rounded hover:bg-indigo-600 hover:text-white transition text-center font-medium">
-                    Buka Website &rarr;
-                </a>
-            </div>
             
             <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition border-t-4 border-blue-500 flex flex-col justify-between">
                 <div>
@@ -96,9 +85,20 @@ $user = $auth->getUser(); // Ambil data session user (id, username, role)
                     Kelola User &rarr;
                 </a>
             </div>
+            <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition border-t-4 border-indigo-500 flex flex-col justify-between">
+                <div>
+                    <div class="text-indigo-500 text-3xl mb-4"><i class="fas fa-tags"></i></div>
+                        <h3 class="font-bold text-lg text-gray-800 mb-2">Kelola Kategori</h3>
+                        <p class="text-gray-500 text-sm mb-4">Buat, edit, atau hapus kategori untuk mengelompokkan postingan.</p>
+                    </div>
+                        <a href="categories.php" class="block bg-indigo-50 text-indigo-600 px-4 py-2 rounded hover:bg-indigo-600 hover:text-white transition text-center font-medium">
+                            Buka Kategori &rarr;
+                         </a>
+            </div>
             <?php endif; ?>
 
         </div>
+    
     </div>
 
 </body>

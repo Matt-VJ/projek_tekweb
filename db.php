@@ -1,12 +1,9 @@
 <?php
-// Database connection for Tophers public pages
-// Adjust these settings to match your local XAMPP/phpMyAdmin configuration.
-// Note: Use the database name used in phpMyAdmin (example: 'mini-cms').
 $db_config = [
     'host' => '127.0.0.1',
     'user' => 'root',
     'pass' => '',
-    'name' => 'mini_cms', // change if your phpMyAdmin DB uses a different name
+    'name' => 'mini_cms',
     'port' => 3306,
 ];
 
@@ -17,10 +14,8 @@ if ($mysqli->connect_errno) {
     exit;
 }
 
-// Use utf8mb4
 $mysqli->set_charset('utf8mb4');
 
-// small helper
 function db_fetch_all($sql){
     global $mysqli;
     $res = $mysqli->query($sql);

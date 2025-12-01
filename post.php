@@ -1,16 +1,13 @@
 <?php
 require_once __DIR__ . '/db.php';
 
-// ambil id post
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// jika id tidak ada
 if ($id <= 0){
     echo "Invalid post ID.";
     exit;
 }
 
-// query post + kategori
 $stmt = $mysqli->prepare(
     "SELECT p.id, p.title, p.excerpt, p.content, p.image, p.published_at,
             c.name AS category_name
@@ -25,7 +22,6 @@ $result = $stmt->get_result();
 $post = $result->fetch_assoc();
 $stmt->close();
 
-// cek post ada atau tidak
 if (!$post){
     echo "Post not found.";
     exit;

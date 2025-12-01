@@ -2,8 +2,6 @@
 class Database {
     private static $instance = null;
     private $conn;
-    
-    // Sesuaikan dengan setting XAMPP kamu
     private $host = 'localhost';
     private $db_name = 'mini_cms';
     private $username = 'root';

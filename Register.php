@@ -1,21 +1,16 @@
 <?php
-// FILE: register.php
-// Letakkan di folder utama (sejajar dengan login.php)
-
 require_once 'classes/Database.php';
 require_once 'classes/Auth.php';
 
 $auth = new Auth();
 $msg = '';
-$msgType = ''; // 'success' atau 'error'
+$msgType = '';
 
-// Proses saat tombol Daftar ditekan
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
     $confirm  = $_POST['confirm_password'];
 
-    // 1. Validasi Input Dasar
     if ($password !== $confirm) {
         $msg = "Password konfirmasi tidak cocok.";
         $msgType = 'error';
@@ -25,16 +20,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $msgType = 'error';
     }
     else {
-        // 2. Panggil fungsi register dari Class Auth
-        // Fungsi ini otomatis mendaftarkan user sebagai 'editor'
         $result = $auth->register($username, $password);
         
-        if ($result === true) {
-            // Jika sukses, arahkan ke login dengan pesan sukses
+        if ($result === true) {           
             header("Location: login.php?registered=true");
             exit;
-        } else {
-            // Jika gagal (misal username sudah ada), tampilkan pesan error
+        } else {          
             $msg = $result;
             $msgType = 'error';
         }
@@ -52,26 +43,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
-
+    
     <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
         
-        <!-- Header -->
         <div class="text-center mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Buat Akun Baru</h2>
             <p class="text-gray-500 text-sm mt-1">Daftar sebagai Kontributor (Editor)</p>
         </div>
         
-        <!-- Notifikasi Error -->
         <?php if($msg): ?>
             <div class="mb-4 p-3 rounded-lg text-sm border-l-4 <?php echo ($msgType == 'success') ? 'bg-green-100 border-green-500 text-green-700' : 'bg-red-100 border-red-500 text-red-700'; ?>">
-                <?= htmlspecialchars($msg) ?>
+                <?= $msg ?>
             </div>
         <?php endif; ?>
 
-        <!-- Form -->
         <form method="POST" action="" class="space-y-4">
             
-            <!-- Username -->
             <div>
                 <label class="block text-gray-700 text-sm font-bold mb-2">Username</label>
                 <div class="relative">
@@ -82,9 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                            placeholder="Pilih username unik" required 
                            value="<?= isset($_POST['username']) ? htmlspecialchars($_POST['username']) : '' ?>">
                 </div>
-            </div>
-
-            <!-- Password -->
+            
             <div>
                 <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
                 <div class="relative">
@@ -96,7 +81,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </div>
 
-            <!-- Konfirmasi Password -->
             <div>
                 <label class="block text-gray-700 text-sm font-bold mb-2">Ulangi Password</label>
                 <div class="relative">
@@ -108,14 +92,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </div>
 
-            <!-- Tombol Submit -->
             <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-md mt-6">
                 Daftar Sekarang
             </button>
 
         </form>
         
-        <!-- Link ke Login -->
         <div class="text-center mt-6 pt-4 border-t border-gray-100">
             <p class="text-sm text-gray-600">
                 Sudah punya akun? <a href="login.php" class="text-blue-600 font-bold hover:underline">Login di sini</a>

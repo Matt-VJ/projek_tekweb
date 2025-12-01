@@ -1,5 +1,4 @@
 <?php
-// FILE: login.php (Versi Desain Keren - Tanpa Hitungan Percobaan)
 require_once 'classes/Database.php';
 require_once 'classes/Auth.php';
 
@@ -7,12 +6,10 @@ $auth = new Auth();
 $error = '';
 $success = '';
 
-// Cek pesan sukses dari register
 if (isset($_GET['registered'])) {
     $success = "Registrasi berhasil! Silakan login.";
 }
 
-// Handler Login
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -51,7 +48,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         <?php endif; ?>
 
-        <!-- NOTIFIKASI ERROR KEREN (Tanpa Percobaan ke-X) -->
         <?php if($error): ?>
             <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 text-sm rounded shadow-sm flex items-start">
                 <div class="mt-0.5 mr-3">
